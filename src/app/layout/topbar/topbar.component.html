@@ -1,0 +1,51 @@
+<div class="layout-topbar" style="display: flex; justify-content: flex-start;">
+    <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
+        <i class="pi pi-bars"></i>
+    </button>
+
+    <div class="layout-topbar-logo" style="margin-right: auto;">
+        <a>
+            <div class="mx-2">
+                <h3>DUMMY</h3>
+            </div>
+        </a>
+        <!-- <p-divider layout="vertical" [style]="{ 'height': '100%', 'margin': '0 0px', 'background-color': '#000', 'width': '2px' }"></p-divider> -->
+        <a>
+            <div class="mx-2 ">
+                <h3>PROJECT</h3>
+            </div>
+        </a>
+    </div>
+
+
+
+    <div class="layout-topbar-right">
+        <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button"
+            (click)="layoutService.showProfileSidebar()">
+            <i class="pi pi-ellipsis-v"></i>
+        </button>
+        <div #topbarmenu class="layout-topbar-menu"
+            [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+            <!-- <p-menu #menu [popup]="true" [model]="menuItems"></p-menu> -->
+            <button pButton class="p-link layout-topbar-button" (click)="menu.toggle($event)">
+                <i class="pi pi-user"></i>
+                <span>Profile</span>
+            </button>
+
+            <p-tieredMenu #menu [model]="menuItems" [popup]="true"></p-tieredMenu>
+
+            <p-dialog #dialog header="Confirmation" [(visible)]="dialog.visible">
+                <p>Are you sure you want to logout?</p>
+                <p-footer>
+                  <button type="button" pRipple pButton class="p-button-outlined p-button-secondary" (click)="hideDialog()" label="No"></button>
+                  <button type="button" pRipple pButton class="p-button-outlined p-button-danger" (click)="logout()" label="Yes" ></button>
+                </p-footer>
+              </p-dialog>
+
+            <button class="p-link layout-topbar-button" (click)="onConfigButtonClick()">
+                <i class="pi pi-cog"></i>
+                <span>Settings</span>
+            </button>
+        </div>
+    </div>
+</div>

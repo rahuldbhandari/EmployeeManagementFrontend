@@ -1,0 +1,23 @@
+
+        <!-- <img src="assets/layout/images/{{layoutService.config.colorScheme === 'light' ? 'logo_mini' : 'logo_dark_mini'}}.png" alt="logo" style="height: 50px; width: auto;"> -->
+        <!-- <div class="layout-sidebar-logo" style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 15px;">
+            <a>
+                <img src="assets\layout\images\{{layoutService.config.colorScheme === 'light' ? 'EmployeeManagement_light' : 'EmployeeManagement_dark'}}.png" alt="logo" style="height: 50px; width: auto; margin: 0 10px;">
+            </a>
+        </div> -->
+        
+
+
+
+<ul class="layout-menu">
+    <ng-container *ngFor="let item of model; let i = index;">
+       
+        <!-- <li app-menuitem *ngIf="!item.separator" [item]="item" [index]="i" [root]="true"></li> -->
+        <li><app-menuitem *ngIf="!item.separator" [item]="item" [index]="i" [root]="true"></app-menuitem> </li> 
+        <!-- <li app-menuitem *ngIf="!item.separator" [item]="item" [index]="i" [root]="true"></li> -->
+        <li *ngIf="item.separator" class="menu-separator"></li>
+    </ng-container>
+    <li>
+        
+    </li>
+</ul>
