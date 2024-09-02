@@ -27,13 +27,13 @@ export class ErrorInterceptor implements HttpInterceptor {
      this.spinner.show(); // Show spinner before making the request
     return next.handle(request).pipe(
       tap((event: HttpEvent<any>) => {
-        // console.log('Incoming HTTP response', event);
+        //  
       }),
       catchError((error: HttpErrorResponse) => {
         if(error.status == 401){
           this.router.navigate(['/login']);
         }else{
-          // console.log(error);
+          //  
           this.messageService.add({ key: 'common-toast', severity: 'error', summary: "Something went wrong !"});
         }
 

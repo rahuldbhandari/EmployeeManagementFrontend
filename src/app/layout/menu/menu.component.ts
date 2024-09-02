@@ -23,6 +23,12 @@ export class MenuComponent implements OnInit {
                 items: [
                     { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: [''] }
                 ]
+            },
+            {
+                label: 'Employee',
+                items: [
+                    { label: 'Employee', icon: 'pi pi-fw pi-home', routerLink: ['/employee'] }
+                ]
             }
         ];
     }
