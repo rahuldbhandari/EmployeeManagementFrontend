@@ -1,8 +1,8 @@
 export interface Employee {
-    birthDate: Date;
-    firstName: string;
-    lastName:  string;
-    gender:    Gender;
+    jonmoTarikh: Date;
+    prothomNaam: string;
+    seshNaam:  string;
+    lingo:    Gender;
     hireDate:  Date;
 }
 

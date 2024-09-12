@@ -36,41 +36,60 @@ export class EmployeeComponent implements OnInit {
 
   ngOnInit(): void {
     //  this.apiservice.patch(this.url, JSON.stringify('{"paginationQueries": {"pageNumber": 1,"pageSize": 10}}')).subscribe((response) => {
-     this.apiservice.patch(this.url, {"paginationQueries": {"pageNumber": 1,"pageSize": 30}}).subscribe((response) => {
+      this.apiservice.patch(this.url, {"pageIndex": 1,"pageSize": 15}).subscribe((response) => {
+       
+        this.employees = <Result> response.result;
+        this.TableDataCreate();
+         
+        
+      });
+     
+  }
+
+  TableDataCreate(){
+    this.isLoading = true;
+    var newTabledata : DynamicTable<Employee> = {
+      headers: [],
+      childHeaders: [],
+      data: [],
+      dataCount: 0
+    };
+    newTabledata.headers = <TableHeader []>[
+      { name: 'First Name', fieldName: 'firstName', isSortable : true, isFilterable:true, filterField: "firstName", 
+        filterEnums: <FilterEnum []>[
+          {
+            value: 1,
+            label: "First Name",
+            styleClass: "primary"
+          },
+        ],
+        dataType: "object",
+        
+      },
+      { name: 'Last Name', fieldName: 'seshNaam', isSortable : true, isFilterable:false, filterField: "seshNaam"},
+      { name: 'Gender', fieldName: 'gender', isSortable : true, isFilterable:false, filterField: "gender"},
+      { name: 'Birth Date', fieldName: 'birthDate', isSortable : true, isFilterable:false, filterField: "birthDate"},
+      { name: 'Hire Date', fieldName: 'hireDate', isSortable : true, isFilterable:false, filterField: "hireDate"},
+    ];
+    newTabledata.data = <Employee[]>this.employees?.data;
+    this.isLoading = false;
+    this.tableData = newTabledata
+  }
+  HandleQueryParameterChange(event : any){
+    console.log(event);
+    this.apiservice.patch(this.url, event).subscribe((response) => {
        
       this.employees = <Result> response.result;
       this.TableDataCreate();
        
       
     });
-     
   }
 
-  TableDataCreate(){
-    this.isLoading = true;
-    this.tableData.headers = <TableHeader []>[
-      { name: 'First Name', fieldName: 'firstName', isSortable : true, isFilterable:true, filterField: "firstName", 
-        filterEnums: <FilterEnum []>[
-          {
-            value: 1,
-            label: "firstName",
-            styleClass: "firstName"
-          }
-        ]
-      },
-      { name: 'Last Name', fieldName: 'lastName', isSortable : true, isFilterable:true, filterField: "lastName"},
-      { name: 'Gender', fieldName: 'gender', isSortable : true, isFilterable:true, filterField: "gender"},
-      { name: 'Birth Date', fieldName: 'birthDate', isSortable : true, isFilterable:true, filterField: "birthDate"},
-      { name: 'Hire Date', fieldName: 'hireDate', isSortable : true, isFilterable:true, filterField: "hireDate"},
-    ];
-    this.tableData.data = <Employee[]>this.employees?.data;
-    this.isLoading = false;
-  }
-  HandleQueryParameterChange(event : any){
+  HandSearchKeyChange(event : any){
     console.log(event);
     
   }
-
   
 
 }
