@@ -21,9 +21,9 @@ import { Employee } from '../../models/employee.model';
 })
 export class EmployeeComponent implements OnInit {
 
-  url = environment.BaseURL + "Employee/" + environment.version + "/Get"
+  url = environment.BaseURL + "Employee/" + environment.version + "/GetAll"
   employees? : Result ;
-  tableData : DynamicTable<Employee> 
+  tableData : DynamicTable<Employee>
   isLoading = true;
   constructor(public apiservice: ApiService){
     this.tableData = {
@@ -36,14 +36,14 @@ export class EmployeeComponent implements OnInit {
 
   ngOnInit(): void {
     //  this.apiservice.patch(this.url, JSON.stringify('{"paginationQueries": {"pageNumber": 1,"pageSize": 10}}')).subscribe((response) => {
-      this.apiservice.patch(this.url, {"pageIndex": 1,"pageSize": 15}).subscribe((response) => {
-       
+      this.apiservice.post(this.url, {"pageIndex": 1,"pageSize": 15}).subscribe((response) => {
+
         this.employees = <Result> response.result;
         this.TableDataCreate();
-         
-        
+
+
       });
-     
+
   }
 
   TableDataCreate(){
@@ -55,7 +55,7 @@ export class EmployeeComponent implements OnInit {
       dataCount: 0
     };
     newTabledata.headers = <TableHeader []>[
-      { name: 'First Name', fieldName: 'firstName', isSortable : true, isFilterable:true, filterField: "firstName", 
+      { name: 'First Name', fieldName: 'firstName', isSortable : true, isFilterable:true, filterField: "firstName",
         filterEnums: <FilterEnum []>[
           {
             value: 1,
@@ -64,7 +64,7 @@ export class EmployeeComponent implements OnInit {
           },
         ],
         dataType: "object",
-        
+
       },
       { name: 'Last Name', fieldName: 'seshNaam', isSortable : true, isFilterable:false, filterField: "seshNaam"},
       { name: 'Gender', fieldName: 'gender', isSortable : true, isFilterable:false, filterField: "gender"},
@@ -78,19 +78,19 @@ export class EmployeeComponent implements OnInit {
   HandleQueryParameterChange(event : any){
     console.log(event);
     this.apiservice.patch(this.url, event).subscribe((response) => {
-       
+
       this.employees = <Result> response.result;
       this.TableDataCreate();
-       
-      
+
+
     });
   }
 
   HandSearchKeyChange(event : any){
     console.log(event);
-    
+
   }
-  
+
 
 }
 
