@@ -9,10 +9,8 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { CardModule } from 'primeng/card';
 import { ApiService } from '../../services/api.service';
 import { environment } from '../../../environments/environment';
-import { PaginatorResponse, Result } from '../../models/paginator-reponse.model';
 import { TableHeader } from '../../models/dynamic-table.model';
 import { Employee } from '../../models/employee.model';
-
 @Component({
   selector: 'app-employee',
   standalone: true,
@@ -20,11 +18,15 @@ import { Employee } from '../../models/employee.model';
   templateUrl: './employee.component.html'
 })
 export class EmployeeComponent implements OnInit {
+onTablePageChange($event: Event) {
+throw new Error('Method not implemented.');
+}
 
-  url = environment.BaseURL + "Employee/" + environment.version + "/Get"
-  employees? : Result ;
+  url = environment.BaseURL + "Employee/" + environment.version + "/GetAll?deptno=d005"
+  // employees? : Result ;
   tableData : DynamicTable<Employee> 
   isLoading = true;
+data: any;
   constructor(public apiservice: ApiService){
     this.tableData = {
       headers: [],
@@ -35,10 +37,10 @@ export class EmployeeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //  this.apiservice.patch(this.url, JSON.stringify('{"paginationQueries": {"pageNumber": 1,"pageSize": 10}}')).subscribe((response) => {
-      this.apiservice.patch(this.url, {"pageIndex": 1,"pageSize": 15}).subscribe((response) => {
+    //  this.apiservice.patch(this.url, JSON.stringify('{"paginationQueries": {"pageNumber": 1,"limit": 10}}')).subscribe((response) => {
+      this.apiservice.post(this.url, {"skip": 1,"limit": 15}).subscribe((response) => {
        
-        this.employees = <Result> response.result;
+        // this.employees = <Result> response.result;
         this.TableDataCreate();
          
         
@@ -71,15 +73,17 @@ export class EmployeeComponent implements OnInit {
       { name: 'Birth Date', fieldName: 'birthDate', isSortable : true, isFilterable:false, filterField: "birthDate"},
       { name: 'Hire Date', fieldName: 'hireDate', isSortable : true, isFilterable:false, filterField: "hireDate"},
     ];
-    newTabledata.data = <Employee[]>this.employees?.data;
+    // newTabledata.data = <Employee[]>this.employees?.data;
     this.isLoading = false;
     this.tableData = newTabledata
   }
   HandleQueryParameterChange(event : any){
     console.log(event);
-    this.apiservice.patch(this.url, event).subscribe((response) => {
+    console.log(JSON.stringify(event));
+
+    this.apiservice.post(this.url, event).subscribe((response) => {
        
-      this.employees = <Result> response.result;
+      // this.employees = <Result> response.result;
       this.TableDataCreate();
        
       

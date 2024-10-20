@@ -41,8 +41,8 @@ export interface SortParameter {
 
 export interface DynamicTableQueryParameters {
     // listType: string;
-    pageSize: number;
-    pageIndex: number;
+    limit: number;
+    skip: number;
     filterParameters: FilterParameter[];
     sortParameters: SortParameter;
 }

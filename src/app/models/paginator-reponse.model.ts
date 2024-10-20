@@ -9,6 +9,6 @@ export interface PaginatorResponse {
 export interface Result {
     data:         any[];
     pageNumber:   number;
-    pageSize:     number;
+    limit:     number;
     totalRecords: number;
 }

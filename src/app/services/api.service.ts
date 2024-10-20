@@ -9,7 +9,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  get(url: string) {
+  get(url: string):Observable<any>  {
     return this.http.get(url);
   }
 

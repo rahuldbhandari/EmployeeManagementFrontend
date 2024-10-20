@@ -29,6 +29,12 @@ export class MenuComponent implements OnInit {
                 items: [
                     { label: 'Employee', icon: 'pi pi-fw pi-home', routerLink: ['/employee'] }
                 ]
+            },
+            {
+                label: 'Test',
+                items: [
+                    { label: 'Test', icon: 'pi pi-fw pi-home', routerLink: ['/test'] }
+                ]
             }
         ];
     }

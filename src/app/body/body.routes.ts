@@ -8,6 +8,10 @@ export const BodyRoute : Routes = [
     {
         path: 'employee',
         loadComponent: () => import('./employee/employee.component').then(c => c.EmployeeComponent)
+    },
+    {
+        path: 'test',
+        loadComponent: () => import('./common/dynamic-table/test.component').then(c => c.TestComponent)
     }
     
     
