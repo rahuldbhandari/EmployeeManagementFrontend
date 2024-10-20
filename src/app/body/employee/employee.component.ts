@@ -22,9 +22,15 @@ onTablePageChange($event: Event) {
 throw new Error('Method not implemented.');
 }
 
+<<<<<<< HEAD
   url = environment.BaseURL + "Employee/" + environment.version + "/GetAll?deptno=d005"
   // employees? : Result ;
   tableData : DynamicTable<Employee> 
+=======
+  url = environment.BaseURL + "Employee/" + environment.version + "/GetAll"
+  employees? : Result ;
+  tableData : DynamicTable<Employee>
+>>>>>>> c6b39625af2141530b6418b13f0c8793a9cbdcd4
   isLoading = true;
 data: any;
   constructor(public apiservice: ApiService){
@@ -37,15 +43,22 @@ data: any;
   }
 
   ngOnInit(): void {
+<<<<<<< HEAD
     //  this.apiservice.patch(this.url, JSON.stringify('{"paginationQueries": {"pageNumber": 1,"limit": 10}}')).subscribe((response) => {
       this.apiservice.post(this.url, {"skip": 1,"limit": 15}).subscribe((response) => {
        
         // this.employees = <Result> response.result;
+=======
+    //  this.apiservice.patch(this.url, JSON.stringify('{"paginationQueries": {"pageNumber": 1,"pageSize": 10}}')).subscribe((response) => {
+      this.apiservice.post(this.url, {"pageIndex": 1,"pageSize": 15}).subscribe((response) => {
+
+        this.employees = <Result> response.result;
+>>>>>>> c6b39625af2141530b6418b13f0c8793a9cbdcd4
         this.TableDataCreate();
-         
-        
+
+
       });
-     
+
   }
 
   TableDataCreate(){
@@ -57,7 +70,7 @@ data: any;
       dataCount: 0
     };
     newTabledata.headers = <TableHeader []>[
-      { name: 'First Name', fieldName: 'firstName', isSortable : true, isFilterable:true, filterField: "firstName", 
+      { name: 'First Name', fieldName: 'firstName', isSortable : true, isFilterable:true, filterField: "firstName",
         filterEnums: <FilterEnum []>[
           {
             value: 1,
@@ -66,7 +79,7 @@ data: any;
           },
         ],
         dataType: "object",
-        
+
       },
       { name: 'Last Name', fieldName: 'seshNaam', isSortable : true, isFilterable:false, filterField: "seshNaam"},
       { name: 'Gender', fieldName: 'gender', isSortable : true, isFilterable:false, filterField: "gender"},
@@ -79,22 +92,28 @@ data: any;
   }
   HandleQueryParameterChange(event : any){
     console.log(event);
+<<<<<<< HEAD
     console.log(JSON.stringify(event));
 
     this.apiservice.post(this.url, event).subscribe((response) => {
        
       // this.employees = <Result> response.result;
+=======
+    this.apiservice.patch(this.url, event).subscribe((response) => {
+
+      this.employees = <Result> response.result;
+>>>>>>> c6b39625af2141530b6418b13f0c8793a9cbdcd4
       this.TableDataCreate();
-       
-      
+
+
     });
   }
 
   HandSearchKeyChange(event : any){
     console.log(event);
-    
+
   }
-  
+
 
 }
 
