@@ -1,27 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { DynamicTable, DynamicTableComponent, DynamicTableQueryParameters } from './dynamic-table.component';
+import { DataQuery, DataSource, DataTable} from './p-rd-table.component';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 
 @Component({
   selector: 'app-test',
   standalone: true,
-  imports: [DynamicTableComponent],
+  imports: [DataTable],
   template: `
-    <dynamic-table [rows]="5" [rowsPerPageOptions]="[5, 10, 20]" [data]="tableData.data" [dataCount]="tableData.dataCount" [headers]="tableData.headers" selectionMode="single" (rowSelect)="handleRowSelection($event)"
+    <p-d-table 
+      [rows]="5" 
+      [dataSource]="tableData"
+      selectionMode="multiple"
+      (selectionChange)="handleRowSelection($event)"
       (queryParameterChange)="handQueryParameterChange($event)" size="small">
-    </dynamic-table>
+    </p-d-table>
   `
 })
 export class TestComponent implements OnInit {
-  tableData: DynamicTable = {
+  tableData: DataSource = {
     headers: [
-      { name: 'ID', dataType: 'number', fieldName: 'id', sortable: true },
+      { name: 'ID', dataType: 'number', fieldName: 'id', sortable: true, onClick: this.abcd },
       { name: 'First Name', dataType: 'string', fieldName: 'firstName', sortable: true },
       { name: 'Last Name', dataType: 'string', fieldName: 'lastName', sortable: false }
     ],
     data: [],
-    dataCount: 0
+    totalRecords: 10
   };
 
 
@@ -32,11 +36,12 @@ export class TestComponent implements OnInit {
   }
   
 
-  load(query: DynamicTableQueryParameters = {limit: 5,skip: 0, sortParameters: { field: '', order: '' }}){
-    this.apiservice.get(`https://dummyjson.com/users/?limit=${query.limit}&skip=${query.skip}&sortBy=${query.sortParameters.field}&order=${query.sortParameters.order}&select=id,firstName,lastName,age`)
+  load(query: DataQuery = {limit: 5,skip: 0, sortBy: { field: '', order: '' }}){
+    this.apiservice.get(`https://dummyjson.com/users/?limit=${query.limit}&skip=${query.skip}&sortBy=${query.sortBy.field}&order=${query.sortBy.order}&select=id,firstName,lastName,age`)
     .subscribe((response) => {
       this.tableData.data = response.users
-      this.tableData.dataCount = response.total
+      this.tableData.totalRecords = response.total
+
     });
   }
 
@@ -49,4 +54,9 @@ export class TestComponent implements OnInit {
     console.log('Query parameters changed:', event);
     this.load(event)
   }
+  abcd(rowData: any) {
+    console.log('Column clicked:', rowData);
+  }
+
+
 }

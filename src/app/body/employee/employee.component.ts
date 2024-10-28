@@ -22,15 +22,9 @@ onTablePageChange($event: Event) {
 throw new Error('Method not implemented.');
 }
 
-<<<<<<< HEAD
   url = environment.BaseURL + "Employee/" + environment.version + "/GetAll?deptno=d005"
   // employees? : Result ;
   tableData : DynamicTable<Employee> 
-=======
-  url = environment.BaseURL + "Employee/" + environment.version + "/GetAll"
-  employees? : Result ;
-  tableData : DynamicTable<Employee>
->>>>>>> c6b39625af2141530b6418b13f0c8793a9cbdcd4
   isLoading = true;
 data: any;
   constructor(public apiservice: ApiService){
@@ -43,17 +37,10 @@ data: any;
   }
 
   ngOnInit(): void {
-<<<<<<< HEAD
     //  this.apiservice.patch(this.url, JSON.stringify('{"paginationQueries": {"pageNumber": 1,"limit": 10}}')).subscribe((response) => {
       this.apiservice.post(this.url, {"skip": 1,"limit": 15}).subscribe((response) => {
        
         // this.employees = <Result> response.result;
-=======
-    //  this.apiservice.patch(this.url, JSON.stringify('{"paginationQueries": {"pageNumber": 1,"pageSize": 10}}')).subscribe((response) => {
-      this.apiservice.post(this.url, {"pageIndex": 1,"pageSize": 15}).subscribe((response) => {
-
-        this.employees = <Result> response.result;
->>>>>>> c6b39625af2141530b6418b13f0c8793a9cbdcd4
         this.TableDataCreate();
 
 
@@ -92,17 +79,11 @@ data: any;
   }
   HandleQueryParameterChange(event : any){
     console.log(event);
-<<<<<<< HEAD
     console.log(JSON.stringify(event));
 
     this.apiservice.post(this.url, event).subscribe((response) => {
        
       // this.employees = <Result> response.result;
-=======
-    this.apiservice.patch(this.url, event).subscribe((response) => {
-
-      this.employees = <Result> response.result;
->>>>>>> c6b39625af2141530b6418b13f0c8793a9cbdcd4
       this.TableDataCreate();
 
 
