@@ -9,25 +9,11 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  get(url: string):Observable<any>  {
-    return this.http.get(url);
+  get<T = any>(url: string): Observable<T> {
+    return this.http.get<T>(url);
   }
 
-  post(url: string, payload: any | null):Observable<any> {
-    return this.http.post(url, payload);
-  }
-
-
-  put(url: string, payload: any):Observable<any> {
-    return this.http.put(url, payload);
-  }
-  
-  patch(url: string, payload: any):Observable<any> {
-     
-    return this.http.patch(url, payload);
-  }
-
-  delete(url: string) {
-    return this.http.delete(url);
+  post<T = any>(url: string, payload: any | null): Observable<T> {
+    return this.http.post<T>(url, payload);
   }
 }
