@@ -3,15 +3,14 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { ButtonModule } from 'primeng/button';
-import { User } from './test.component';
 
 export interface DataSource<T = any> {
-  headers: DataHeader[];
+  headers: DataHeader<T>[];
   data: T[];
   totalRecords: number;
 }
 
-export interface DataHeader {
+export interface DataHeader<T = any> {
   name: string;
   dataType: string;
   fieldName: string;
@@ -19,6 +18,7 @@ export interface DataHeader {
   styleClass?: string;
   clickable?: boolean;
   width?: string; // Nullable width property
+  ngClass?: (rowData: T) => string | string[] | Set<string> | { [klass: string]: any };
 }
 
 export interface DataQuery {
@@ -60,7 +60,9 @@ export interface ActionButton<T = any> {
       [selectionMode]="selectionMode"
       (sortFunction)="sortitionHandler($event)"
       (selectionChange)="rowSelectionHandler($event)"
-      styleClass="p-datatable-gridlines">
+      [styleClass]="styleClass" 
+      [tableStyle]="tableStyle"
+      >
       <ng-template pTemplate="header">
         <tr>
           <th *ngIf="selectionMode !== undefined" style="width: 3rem"><p-tableHeaderCheckbox/></th>
@@ -77,12 +79,12 @@ export interface ActionButton<T = any> {
             <p-tableCheckbox *ngIf="selectionMode === 'multiple'" [value]="rowData" />
             <p-tableRadioButton *ngIf="selectionMode === 'single'" [value]="rowData" />
           </td>
-          <td *ngFor="let header of dataSource.headers"  
-              (click)="header.clickable ? cellClickHandler(rowData[header.fieldName], rowData) : null"
-              [ngClass]="[header.styleClass || '', header.clickable ? 'cursor-pointer' : '']"
+          <td *ngFor="let header of dataSource.headers"
+              (click)="header.clickable ? cellClickHandler(rowData[header.fieldName], rowData) : null" class="table-cell">
+            <span 
+            [ngClass]="header.ngClass ? header.ngClass(rowData) : ''"
               [style.width]="header.width"
-              class="table-cell">
-            {{ rowData[header.fieldName] }}
+              >{{ rowData[header.fieldName] }}</span>
           </td>
           <td *ngIf="areActionButtonsVisible(rowData)">
             <div style="display: flex; gap: 0.5rem;">
@@ -116,7 +118,6 @@ export interface ActionButton<T = any> {
    .table-cell {
       overflow: hidden; /* Hide overflowing content */
       text-overflow: ellipsis; /* Show ellipsis for overflow */
-      white-space: nowrap; /* Prevent wrapping */
       max-width: 0px; /* Set max width for cell */
     }
   `]
@@ -128,6 +129,9 @@ export class DataTable<T = any> {
   @Input() size: 'small' | 'large' = 'small';
   @Input() selectionMode: 'single' | 'multiple' | undefined = undefined;
   @Input() actionButtons: ActionButton<T>[] = [];
+
+  @Input() styleClass: string | undefined;
+  @Input() tableStyle: {[klass: string]: any;} | null | undefined = { 'min-width': '50rem' };
   
   private _selectedRows: T[] = [];
   

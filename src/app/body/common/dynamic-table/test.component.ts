@@ -30,6 +30,7 @@ export interface User {
       [actionButtons]= "actionButtons"
       size="small"
       [selectedRows]=this.selectedUsers
+      [styleClass]="'p-datatable-gridlines'"
       (onCellClick)= "cellClickHandler($event)"
       (selectionChange)="handleRowSelection($event)"
       (queryParameterChange)="handleQueryParameterChange($event)" 
@@ -37,16 +38,18 @@ export interface User {
       >
     </p-dtable>
   `
+  // ,
+  // 
 })
 export class TestComponent implements OnInit {
   tableData: DataSource<User> = {
     headers: [
-      { name: 'ID', dataType: 'number', fieldName: 'id', sortable: true, clickable: true, styleClass: "text-indigo-500 font-italic", width: "8%"},
+      { name: 'ID', dataType: 'number', fieldName: 'id', sortable: true, clickable: true, width: "8%"},
       { name: 'First Name', dataType: 'string', fieldName: 'firstName', sortable: true, width: "14%" },
       { name: 'Last Name', dataType: 'string', fieldName: 'lastName', sortable: false, width: "11%" },
-      { name: 'Email', dataType: 'string', fieldName: 'email', sortable: false, width: "10%" },
-      { name: 'Username', dataType: 'string', fieldName: 'username', sortable: false, width: "10%" },
-      { name: 'Age', dataType: 'string', fieldName: 'age', sortable: false, width: "5%" },
+      { name: 'Email', dataType: 'string', fieldName: 'email', sortable: false, width: "2%" },
+      { name: 'Username', dataType: 'string', fieldName: 'username', sortable: false, width: "10%", ngClass: (rowData) => ['p-tag', rowData.age >= 32 ? 'p-tag-success' : 'p-tag-warning'] },
+      { name: 'Age', dataType: 'string', fieldName: 'age', sortable: false, width: "5%", ngClass: (rowData) => 'underline' },
       { name: 'Height', dataType: 'string', fieldName: 'height', sortable: false, width: "5%" },
       { name: 'Weight', dataType: 'string', fieldName: 'weight', sortable: false, width: "5%" }
     ],
