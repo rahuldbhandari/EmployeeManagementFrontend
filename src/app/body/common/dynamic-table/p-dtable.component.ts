@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
+import { TooltipOptions } from 'primeng/api/tooltipoptions';
 
 export interface DataSource<T = any> {
   headers: DataHeader<T>[];
@@ -17,8 +19,10 @@ export interface DataHeader<T = any> {
   sortable: boolean;
   styleClass?: string;
   clickable?: boolean;
-  width?: string; // Nullable width property
   ngClass?: (rowData: T) => string | string[] | Set<string> | { [klass: string]: any };
+  width?: string;
+  tooltip?: boolean;
+  tooltipOptions?: TooltipOptions;
 }
 
 export interface DataQuery {
@@ -44,17 +48,20 @@ export interface ActionButton<T = any> {
   visibility?: (data: T) => boolean;
 }
 
+
+
+
 @Component({
   selector: 'p-dtable',
   standalone: true,
-  imports: [CommonModule, TableModule, PaginatorModule, ButtonModule],
+  imports: [CommonModule, TableModule, PaginatorModule, ButtonModule, TooltipModule],
   template: `
-    <h1>MY DYNAMIC TABLE</h1>
+    <h1>p-dtable</h1>
     <div>
       <span *ngFor="let user of selectedRows">{{ user.id }} , </span>
     </div>
     <br><br>
-    <p-table 
+    <p-table
       [value]="dataSource.data.slice(0, rows)"
       [(selection)]="selectedRows"
       [selectionMode]="selectionMode"
@@ -84,20 +91,22 @@ export interface ActionButton<T = any> {
             <span 
             [ngClass]="header.ngClass ? header.ngClass(rowData) : ''"
               [style.width]="header.width"
+              [pTooltip]="header.tooltip ? rowData[header.fieldName] : null"
+              [tooltipOptions]= "header.tooltipOptions || defaultTooltipOptions"
               >{{ rowData[header.fieldName] }}</span>
           </td>
           <td *ngIf="areActionButtonsVisible(rowData)">
             <div style="display: flex; gap: 0.5rem;">
               <ng-container *ngFor="let actionButton of actionButtons">
-                <p-button *ngIf="!actionButton.visibility || actionButton.visibility(rowData)" 
-                          [label]="actionButton.label" 
-                          [icon]="actionButton.icon" 
-                          [rounded]="actionButton.rounded" 
-                          [severity]="actionButton.severity" 
-                          [raised]="actionButton.raised" 
-                          [text]="actionButton.text" 
-                          [outlined]="actionButton.outlined" 
-                          size="small" 
+                <p-button *ngIf="!actionButton.visibility || actionButton.visibility(rowData)"
+                          [label]="actionButton.label"
+                          [icon]="actionButton.icon"
+                          [rounded]="actionButton.rounded"
+                          [severity]="actionButton.severity"
+                          [raised]="actionButton.raised"
+                          [text]="actionButton.text"
+                          [outlined]="actionButton.outlined"
+                          size="small"
                           (onClick)="actionButtonClickHandler(actionButton, rowData)">
                 </p-button>
               </ng-container>
@@ -111,7 +120,7 @@ export interface ActionButton<T = any> {
       [totalRecords]="dataSource.totalRecords"
       (onPageChange)="paginationHandler($event)"
       [rowsPerPageOptions]="rowsPerPageOptions"
-      currentPageReportTemplate="Showing {skip + 1} to {skip + rows} of {totalRecords} entries"> <!-- Adjusted report to show correct range -->
+      currentPageReportTemplate="Showing {skip + 1} to {skip + rows} of {totalRecords} entries">
     </p-paginator>
   `,
   styles: [`
@@ -133,8 +142,15 @@ export class DataTable<T = any> {
   @Input() styleClass: string | undefined;
   @Input() tableStyle: {[klass: string]: any;} | null | undefined = { 'min-width': '50rem' };
   
+  // Default tooltip options if none are provided in the header
+  defaultTooltipOptions : TooltipOptions = {
+    showDelay: 500,
+    tooltipEvent: "hover",
+    tooltipPosition: "bottom"
+}
+
   private _selectedRows: T[] = [];
-  
+
   @Input() set selectedRows(value: T[]) {
     this._selectedRows = value || [];
   }
