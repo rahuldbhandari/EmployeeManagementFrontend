@@ -1,0 +1,51 @@
+<p-table [value]="dataSource.data" [(selection)]="selectedRows" [scrollable]="true" scrollHeight="400px"
+		[resizableColumns]="true" columnResizeMode="expand" [styleClass]="styleClass" [tableStyle]="tableStyle"
+		(onSort)="sortitionHandler($event)" (selectionChange)="rowSelectionHandler($event)" selectionMode="single">
+
+		<ng-template pTemplate="header">
+			<tr>
+				<th *ngIf="selectionMode !== undefined" style="width: 3rem"><p-tableHeaderCheckbox
+						*ngIf="selectionMode === 'multiple'" /></th>
+				<ng-container *ngFor="let header of dataSource.headers">
+					<th *ngIf="header.sortable" [pSortableColumn]="header.fieldName" [style.width]="header.width"
+						pResizableColumn>
+						<p-sortIcon field="{{header.fieldName}}" />{{ header.name }}
+					</th>
+					<th *ngIf="!header.sortable" [style.width]="header.width" pResizableColumn>{{ header.name }}</th>
+				</ng-container>
+				<th *ngIf="actionButtons.length > 0 && areActionButtonsVisible(dataSource.data[0])">Actions</th>
+			</tr>
+		</ng-template>
+
+		<ng-template pTemplate="body" let-rowData>
+			<tr>
+				<td *ngIf="selectionMode !== undefined">
+					<p-tableCheckbox *ngIf="selectionMode === 'multiple'" [value]="rowData" />
+					<p-tableRadioButton *ngIf="selectionMode === 'single'" [value]="rowData" />
+				</td>
+				<td *ngFor="let header of dataSource.headers"
+					(click)="header.clickable ? cellClickHandler(rowData[header.fieldName], rowData) : null"
+					class="table-cell">
+					<span [ngClass]="header.ngClass ? header.ngClass(rowData) : ''" [style.width]="header.width"
+						[pTooltip]="header.tooltip ? rowData[header.fieldName] : null"
+						[tooltipOptions]="header.tooltipOptions || defaultTooltipOptions">{{ rowData[header.fieldName]
+						}}</span>
+				</td>
+				<td *ngIf="areActionButtonsVisible(rowData)">
+					<ng-container *ngFor="let actionButton of actionButtons">
+						<p-button *ngIf="!actionButton.visibility || actionButton.visibility(rowData)"
+							[label]="actionButton.label" [icon]="actionButton.icon" [rounded]="actionButton.rounded"
+							[severity]="actionButton.severity" [raised]="actionButton.raised" [text]="actionButton.text"
+							[outlined]="actionButton.outlined" size="small"
+							(onClick)="actionButtonClickHandler(actionButton, rowData)">
+						</p-button>
+					</ng-container>
+				</td>
+			</tr>
+		</ng-template>
+	</p-table>
+
+	<p-paginator [rows]="limit" [totalRecords]="dataSource.totalRecords" (onPageChange)="paginationHandler($event)"
+		[rowsPerPageOptions]="rowsPerPageOptions"
+		currentPageReportTemplate="Showing {skip + 1} to {skip + rows} of {totalRecords} entries">
+	</p-paginator>

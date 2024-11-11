@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActionButton, DataQuery, DataSource, DataTable} from './p-dtable.component';
-import { ApiService } from '../../../services/api.service';
+import { ApiService } from '../../services/api.service';
 import { CommonModule } from '@angular/common';
+import { RDPTableComponent } from '../common/rd-p-table/rd-p-table.component';
+import { DataSource, ActionButton, DataQuery } from '../common/rd-p-table/rd-p-table.interface';
 export interface PaginatedResponse<T> {
   users: T[];
   total: number;
@@ -22,13 +23,13 @@ export interface User {
 @Component({
   selector: 'app-test',
   standalone: true,
-  imports: [DataTable, CommonModule],
+  imports: [RDPTableComponent, CommonModule],
   template: `
     <div>
       <span *ngFor="let user of selectedUsers">{{ user.id }} , </span>
     </div>
     <br><br>
-    <p-dtable
+    <rd-p-table
       [rows]="5"
       [dataSource]="tableData"
       selectionMode="multiple"
@@ -41,10 +42,8 @@ export interface User {
       (queryParameterChange)="handleQueryParameterChange($event)"
       (onActionButtonClicked)="actionButtonClickHandler($event)"
       >
-    </p-dtable>
+    </rd-p-table>
   `
-  // ,
-  // 
 })
 export class TestComponent implements OnInit {
   tableData: DataSource<User> = {
@@ -53,8 +52,8 @@ export class TestComponent implements OnInit {
       { name: 'First Name', dataType: 'string', fieldName: 'firstName', sortable: true, width: "14%" },
       { name: 'Last Name', dataType: 'string', fieldName: 'lastName', sortable: false, width: "11%" },
       { name: 'Email', dataType: 'string', fieldName: 'email', sortable: false, width: "2%" },
-      { name: 'Username', dataType: 'string', fieldName: 'username', sortable: false, width: "10%", ngClass: (rowData) => ['p-tag', rowData.age >= 32 ? 'p-tag-success' : 'p-tag-warning'] },
-      { name: 'Age', dataType: 'string', fieldName: 'age', sortable: false, width: "5%", ngClass: (rowData) => 'underline' },
+      { name: 'Username', dataType: 'string', fieldName: 'username', sortable: false, width: "10%", ngClass: (rowData: { age: number; }) => ['p-tag', rowData.age >= 32 ? 'p-tag-success' : 'p-tag-warning'] },
+      { name: 'Age', dataType: 'string', fieldName: 'age', sortable: false, width: "5%", ngClass: (rowData: any) => 'underline' },
       { name: 'Height', dataType: 'string', fieldName: 'height', sortable: false, width: "5%" },
       { name: 'Weight', dataType: 'string', fieldName: 'weight', sortable: false, width: "5%" }
     ],
@@ -63,9 +62,9 @@ export class TestComponent implements OnInit {
   };
   selectedUsers : User[] = [];
   actionButtons : ActionButton<User> [] = [
-    {label: "Button-1",icon: "pi pi-check",name: "b1", visibility: (user) => true, severity: "info"},
-    {label: "Button-2",icon: "pi pi-asterisk",name: "b2", visibility: (user) => ((user.id % 2) == 0), severity: "success"},
-    {label: "Button-3",icon: "pi pi-crown",name: "b3", visibility: (user) => true, severity: "help"}
+    {label: "Button-1",icon: "pi pi-check",name: "b1", visibility: () => true, severity: "info"},
+    {label: "Button-2",icon: "pi pi-asterisk",name: "b2", visibility: (user: { id: number; }) => ((user.id % 2) == 0), severity: "success"},
+    {label: "Button-3",icon: "pi pi-crown",name: "b3", visibility: () => true, severity: "help"}
   ]
 
 
@@ -97,7 +96,7 @@ export class TestComponent implements OnInit {
   }
 
   handleQueryParameterChange(event: any) {
-    console.log('Query parameters changed:', event);
+    console.log('Query parameters changed:', JSON.stringify(event));
     this.load(event)
   }
   cellClickHandler(rowData: any) {

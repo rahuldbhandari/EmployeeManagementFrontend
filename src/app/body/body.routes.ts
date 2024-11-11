@@ -11,7 +11,11 @@ export const BodyRoute : Routes = [
     },
     {
         path: 'test',
-        loadComponent: () => import('./common/dynamic-table/test.component').then(c => c.TestComponent)
+        loadComponent: () => import('./test/test.component').then(c => c.TestComponent)
+    },
+    {
+        path: 'sbms-test',
+        loadComponent: () => import('./sbms-test/sbms-test.component').then(c => c.TestComponent)
     }
     
     
