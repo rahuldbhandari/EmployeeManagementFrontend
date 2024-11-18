@@ -1,16 +1,1 @@
-<div>
-    <span *ngFor="let user of selectedPermissions">{{ user.acc_id }} , </span>
-  </div>
-  <br><br>
-  <rd-p-table
-    [rows]="5"
-    [dataSource]="tableData"
-    [selectionMode]="'multiple'"
-    [selectedRows]=selectedPermissions
-    [styleClass]="'p-datatable-gridlines'"
-    (onCellClick)= "cellClickHandler($event)"
-    (selectionChange)="handleRowSelection($event)"
-    (queryParameterChange)="handleQueryParameterChange($event)"
-    (onActionButtonClicked)="actionButtonClickHandler($event)"
-    >
-  </rd-p-table>
+>

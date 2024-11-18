@@ -13,7 +13,7 @@ export interface PaginatedResponse<T> {
     limit: number;
   }
   
-  export interface Permission {
+  export interface Institution {
     acc_id:            number;
     ref_no:            null;
     ia_flag:           string;

@@ -1,7 +1,8 @@
-<p-table [value]="dataSource.data" [(selection)]="selectedRows" [scrollable]="true" scrollHeight="400px"
+<p-card [style]="tableStyle">
+	<p-table [rows]="rows" [paginator]="((!this.paginator) && (this.dataSource.data.length > this.rows))" [value]="dataSource.data" [(selection)]="selectedRows" [scrollable]="true" [scrollHeight]="scrollHeight"
 		[resizableColumns]="true" columnResizeMode="expand" [styleClass]="styleClass" [tableStyle]="tableStyle"
-		(onSort)="sortitionHandler($event)" (selectionChange)="rowSelectionHandler($event)" selectionMode="single">
-
+		(onSort)="sortitionHandler($event)" (selectionChange)="rowSelectionHandler($event)" selectionMode="single" >
+	
 		<ng-template pTemplate="header">
 			<tr>
 				<th *ngIf="selectionMode !== undefined" style="width: 3rem"><p-tableHeaderCheckbox
@@ -16,7 +17,7 @@
 				<th *ngIf="actionButtons.length > 0 && areActionButtonsVisible(dataSource.data[0])">Actions</th>
 			</tr>
 		</ng-template>
-
+	
 		<ng-template pTemplate="body" let-rowData>
 			<tr>
 				<td *ngIf="selectionMode !== undefined">
@@ -44,8 +45,8 @@
 			</tr>
 		</ng-template>
 	</p-table>
-
-	<p-paginator [rows]="limit" [totalRecords]="dataSource.totalRecords" (onPageChange)="paginationHandler($event)"
-		[rowsPerPageOptions]="rowsPerPageOptions"
+	<p-paginator *ngIf="paginator" [rows]="rows" [totalRecords]="dataSource.totalRecords" (onPageChange)="paginationHandler($event)"
+		[style]="tableStyle" [rowsPerPageOptions]="rowsPerPageOptions"
 		currentPageReportTemplate="Showing {skip + 1} to {skip + rows} of {totalRecords} entries">
 	</p-paginator>
+</p-card>

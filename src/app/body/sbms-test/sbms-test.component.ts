@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DynamicQuery, Permission, ApiResponse, PaginatedResponse } from './sbms-test.model';
+import { DynamicQuery, ApiResponse, PaginatedResponse, Institution } from './sbms-test.model';
 import { ApiService } from '../../services/api.service';
-import { RDPTableComponent } from '../common/rd-p-table/rd-p-table.component';
 import { DataSource } from '../common/rd-p-table/rd-p-table.interface';
+import { RdPTableComponent } from '../common/rd-p-table/rd-p-table.component';
 
 
 
@@ -11,8 +11,29 @@ import { DataSource } from '../common/rd-p-table/rd-p-table.interface';
 @Component({
   selector: 'sbms-app-test',
   standalone: true,
-  imports: [RDPTableComponent ,CommonModule],
-  templateUrl: './sbms-test.component.html'
+  imports: [RdPTableComponent, CommonModule, RdPTableComponent],
+  template: `
+    <div>
+    <span *ngFor="let user of selectedPermissions">{{ user.acc_id }} , </span>
+    </div>
+    <br><br>
+    <rd-p-table
+      [rows]="5"
+      [paginator]="true"
+      [dataSource]="tableData"
+      [selectionMode]="'multiple'"
+      [selectedRows]=selectedPermissions
+      [scrollHeight]="'600px'"
+      [styleClass]="'p-datatable-gridlines'"
+      (onCellClick)= "cellClickHandler($event)"
+      (selectionChange)="handleRowSelection($event)"
+      (onActionButtonClicked)="actionButtonClickHandler($event)"
+      (queryParameterChange)="handleQueryParameterChange($event)"
+      >
+</rd-p-table>
+<!-- (queryParameterChange)="handleQueryParameterChange($event)" -->
+
+  `
 })
 export class TestComponent implements OnInit {
   url : string = "http://localhost:5024/api/InstitutionBARegistration/v1/GetAllOfficeRegDtls"
@@ -21,18 +42,19 @@ export class TestComponent implements OnInit {
     skip:     0
   }
 
-  tableData: DataSource<Permission> = {
+  tableData: DataSource<Institution> = {
     headers: [
-      { name: 'Reference No', fieldName: 'acc_id', sortable: true, clickable: true, tooltip: true, tooltipOptions: {tooltipPosition: 'top'}},
-      { name: 'IFSC', fieldName: 'ifsc', sortable: true,},
-      { name: 'Status', fieldName: 'status'},
-      { name: 'Last Processing Date', fieldName: 'last_process_date' },
+      { name: 'Reference No', fieldName: 'acc_id', width: "20%", sortable: true, clickable: true, ngClass: (rowData:Institution) => ['cursor-pointer text-primary font-bold']},
+      { name: 'Account Type', fieldName: 'ia_flag', width: "20%"},
+      { name: 'IFSC Code', fieldName: 'ifsc', width: "20%", sortable: true},
+      { name: 'Status', fieldName: 'status', width: "20%", tooltip: true, tooltipOptions: {tooltipPosition: 'top'}, ngClass: (rowData: Institution) => ['badge', 'primary']},
+      { name: 'Updated On', width: "20%", fieldName: 'last_process_date' },
     ],
     data: [],
     totalRecords: 0
   };
 
-  selectedPermissions : Permission[] = [];
+  selectedPermissions : Institution[] = [];
 
 
   constructor(public apiservice: ApiService){}
@@ -46,11 +68,10 @@ export class TestComponent implements OnInit {
 
 
   load(query: DynamicQuery){
-    this.apiservice.post<ApiResponse<PaginatedResponse<Permission>>>(this.url, query)
+    this.apiservice.post<ApiResponse<PaginatedResponse<Institution>>>(this.url, query)
     .subscribe((response) => {
-      this.tableData.data = response.result.data      
-      
-      this.tableData.totalRecords = response.result.total
+      this.tableData.data = response.result.data    
+      this.tableData.totalRecords = response.result.total  
     });
   }
 
@@ -64,7 +85,7 @@ export class TestComponent implements OnInit {
     this.load(event)
   }
   cellClickHandler(rowData: any) {
-    console.log('Row Clicked:', rowData);
+    alert(JSON.stringify(rowData))
   }
 
   actionButtonClickHandler(data:any){
