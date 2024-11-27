@@ -1,23 +1,30 @@
 <p-card [style]="tableStyle">
+
 	<p-table [rows]="rows" [paginator]="((!this.paginator) && (this.dataSource.data.length > this.rows))" [value]="dataSource.data" [(selection)]="selectedRows" [scrollable]="true" [scrollHeight]="scrollHeight"
 		[resizableColumns]="true" columnResizeMode="expand" [styleClass]="styleClass" [tableStyle]="tableStyle"
-		(onSort)="sortitionHandler($event)" (selectionChange)="rowSelectionHandler($event)" selectionMode="single" >
-	
+		(onSort)="sortitionHandler($event)" (selectionChange)="rowSelectionHandler($event)" selectionMode="single"
+    (onFilter)="filterHandler($event)"
+    >
+
 		<ng-template pTemplate="header">
 			<tr>
 				<th *ngIf="selectionMode !== undefined" style="width: 3rem"><p-tableHeaderCheckbox
 						*ngIf="selectionMode === 'multiple'" /></th>
+
 				<ng-container *ngFor="let header of dataSource.headers">
 					<th *ngIf="header.sortable" [pSortableColumn]="header.fieldName" [style.width]="header.width"
 						pResizableColumn>
 						<p-sortIcon field="{{header.fieldName}}" />{{ header.name }}
+            <!-- <p-columnFilter type="text" field="{{header.fieldName}}" display="menu" /> -->
+
 					</th>
 					<th *ngIf="!header.sortable" [style.width]="header.width" pResizableColumn>{{ header.name }}</th>
 				</ng-container>
 				<th *ngIf="actionButtons.length > 0 && areActionButtonsVisible(dataSource.data[0])">Actions</th>
 			</tr>
+
 		</ng-template>
-	
+
 		<ng-template pTemplate="body" let-rowData>
 			<tr>
 				<td *ngIf="selectionMode !== undefined">
@@ -46,7 +53,12 @@
 		</ng-template>
 	</p-table>
 	<p-paginator *ngIf="paginator" [rows]="rows" [totalRecords]="dataSource.totalRecords" (onPageChange)="paginationHandler($event)"
-		[style]="tableStyle" [rowsPerPageOptions]="rowsPerPageOptions"
-		currentPageReportTemplate="Showing {skip + 1} to {skip + rows} of {totalRecords} entries">
+		[style]="tableStyle" [rowsPerPageOptions]="rowsPerPageOptions" [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {{skip + 1}} to {{skip + rows}} of {totalRecords} entries"
+    >
+
+
 	</p-paginator>
 </p-card>
+
+<!-- currentPageReportTemplate="Showing skip + 1 to {skip + rows} of {totalRecords} entries" -->

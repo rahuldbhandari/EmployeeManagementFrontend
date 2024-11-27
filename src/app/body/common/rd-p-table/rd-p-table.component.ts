@@ -8,11 +8,14 @@ import { TooltipOptions } from 'primeng/api/tooltipoptions';
 import { SortParameter } from 'mh-prime-dynamic-table';
 import { DataSource, ActionButton, DataQuery } from './rd-p-table.interface';
 import { CardModule } from 'primeng/card';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'rd-p-table',
   standalone: true,
-  imports: [CommonModule, TableModule, PaginatorModule, ButtonModule, TooltipModule, CardModule],
+  imports: [CommonModule, TableModule, PaginatorModule, ButtonModule, TooltipModule, CardModule, IconFieldModule, InputIconModule],
   templateUrl: './rd-p-table.component.html',
   styles: [`
     .table-cell {
@@ -50,6 +53,9 @@ export class RdPTableComponent<T = any> {
   sortParams: SortParameter = { field: '', order: '' };
   limit: number = this.rows;
   skip: number = 0;
+
+  preFilter = {"ifsc":[{"value":"SBI","matchMode":"startsWith","operator":"and"}]}
+
  /*  get internalPaginator(): boolean {
     return ((!this.paginator) && (this.dataSource.data.length > this.rows))
   } */
@@ -87,4 +93,8 @@ export class RdPTableComponent<T = any> {
     return this.actionButtons.some(ab => !ab.visibility || ab.visibility(rowData));
   }
 
+  filterHandler(data : any){
+    console.log(data.filters)
+    console.log(JSON.stringify(data.filters))
+  }
 }
