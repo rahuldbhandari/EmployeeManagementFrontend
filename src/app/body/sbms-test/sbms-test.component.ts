@@ -44,7 +44,7 @@ export class TestComponent implements OnInit {
 
   tableData: DataSource<Institution> = {
     headers: [
-      { name: 'Reference No', fieldName: 'acc_id', width: "20%", sortable: true, clickable: true, ngClass: (rowData:Institution) => ['cursor-pointer text-primary font-bold']},
+      { name: 'Reference No', fieldName: 'acc_id', width: "20%", sortable: true, filterable: true, type: "numeric" ,clickable: true, ngClass: (rowData:Institution) => ['cursor-pointer text-primary font-bold']},
       { name: 'Account Type', fieldName: 'ia_flag', width: "20%"},
       { name: 'IFSC Code', fieldName: 'ifsc', width: "20%", sortable: true},
       { name: 'Status', fieldName: 'status', width: "20%", tooltip: true, tooltipOptions: {tooltipPosition: 'top'}, ngClass: (rowData: Institution) => ['badge', 'primary']},
@@ -63,15 +63,15 @@ export class TestComponent implements OnInit {
     this.load(this.defaultQuery);
     this.selectedPermissions = JSON.parse(`[{"acc_id":16480,"ref_no":null,"ia_flag":"N","ifsc":"SBIN0006693","uono":null,"uono_date":null,"status":"Initiated by Bank Operator","last_process_date":"2024-11-05T12:15:17.090871","last_process_flag":150},{"acc_id":16472,"ref_no":null,"ia_flag":"L","ifsc":"SBIN0012363","uono":"wdsdd","uono_date":null,"status":"Account Not Validated","last_process_date":"2024-09-12T15:32:56.500792","last_process_flag":159},{"acc_id":13585,"ref_no":"018292","ia_flag":"N","ifsc":"UBIN0539074","uono":null,"uono_date":null,"status":"Forwarded to GR T for Approval","last_process_date":"2024-04-16T12:05:31","last_process_flag":152}]`);
     console.log("Selected Permission : ",  this.selectedPermissions);
-    
+
   }
 
 
   load(query: DynamicQuery){
     this.apiservice.post<ApiResponse<PaginatedResponse<Institution>>>(this.url, query)
     .subscribe((response) => {
-      this.tableData.data = response.result.data    
-      this.tableData.totalRecords = response.result.total  
+      this.tableData.data = response.result.data
+      this.tableData.totalRecords = response.result.total
     });
   }
 

@@ -16,9 +16,10 @@ export interface DataSource<T = any> {
  */
 export interface DataHeader<T = any> {
     name: string;
-    dataType?: string;
+    type?: string;
     fieldName: string;
     sortable?: boolean;
+    filterable?:boolean;
     styleClass?: string;
     clickable?: boolean;
     ngClass?: (rowData: T) => string | string[] | Set<string> | { [klass: string]: any };
