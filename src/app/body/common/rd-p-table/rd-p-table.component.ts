@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
@@ -6,11 +6,10 @@ import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { TooltipOptions } from 'primeng/api/tooltipoptions';
 import { SortParameter } from 'mh-prime-dynamic-table';
-import { DataSource, ActionButton, DataQuery } from './rd-p-table.interface';
+import { DataSource, ActionButton, DataQuery, FilterParameter } from './rd-p-table.interface';
 import { CardModule } from 'primeng/card';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'rd-p-table',
@@ -26,7 +25,7 @@ import { InputTextModule } from 'primeng/inputtext';
    }
    `]
 })
-export class RdPTableComponent<T = any> {
+export class RdPTableComponent<T = any>{
 
 // INPUTS
   @Input() dataSource!: DataSource<T>;
@@ -47,6 +46,8 @@ export class RdPTableComponent<T = any> {
   @Output() queryParameterChange = new EventEmitter<DataQuery>();
   @Output() onCellClick = new EventEmitter<{ cellData: any, rowData: T }>();
   @Output() onActionButtonClicked = new EventEmitter<{ [key: string]: T }>();
+
+
   defaultTooltipOptions: TooltipOptions = { showDelay: 500, tooltipEvent: "hover", tooltipPosition: "bottom" };
 
   private _selectedRows: T[] = [];
@@ -54,26 +55,32 @@ export class RdPTableComponent<T = any> {
   limit: number = this.rows;
   skip: number = 0;
 
-  preFilter = {"ifsc":[{"value":"SBI","matchMode":"startsWith","operator":"and"}]}
+  filterParameters?: FilterParameter = undefined;
+  inidividualFilterOperator?: "or"
 
- /*  get internalPaginator(): boolean {
-    return ((!this.paginator) && (this.dataSource.data.length > this.rows))
-  } */
-
-  paginationHandler(event: any) {
+  paginationHandler(event: any) {  
     if (this.limit !== event.rows || this.skip !== event.first) {
       this.limit = this.rows = event.rows;
       this.skip = event.first;
-      this.queryParameterChange.emit({ limit: this.limit, skip: this.skip, sortBy: this.sortParams });
+      this.queryParameterChange.emit({ limit: this.limit, skip: this.skip, sortBy: this.sortParams, filterBy: this.filterParameters});
     }
   }
 
-  sortitionHandler(event: any) {
+  sortitionHandler(event: any) {//     
     const newSortParams: SortParameter = { field: event.field, order: event.order === 1 ? 'asc' : 'desc' };
     if (JSON.stringify(this.sortParams) !== JSON.stringify(newSortParams)) {
       this.sortParams = newSortParams;
-      this.queryParameterChange.emit({ limit: this.limit, skip: this.skip, sortBy: newSortParams });
+      this.queryParameterChange.emit({ limit: this.limit, skip: this.skip, sortBy: newSortParams, filterBy: this.filterParameters});
     }
+  }
+
+  filterHandler(data : any){    
+    const newFilter = {filters : data.filters, operator: "or"};
+    if(JSON.stringify(this.filterParameters) !== JSON.stringify(newFilter) ){
+    this.filterParameters = JSON.parse(JSON.stringify(newFilter));
+      this.queryParameterChange.emit({ limit: this.limit, skip: this.skip, sortBy: this.sortParams, filterBy: this.filterParameters});
+    }
+    
   }
 
   rowSelectionHandler(event: T[] | T) {
@@ -93,8 +100,5 @@ export class RdPTableComponent<T = any> {
     return this.actionButtons.some(ab => !ab.visibility || ab.visibility(rowData));
   }
 
-  filterHandler(data : any){
-    console.log(data.filters)
-    console.log(JSON.stringify(data.filters))
-  }
+  
 }

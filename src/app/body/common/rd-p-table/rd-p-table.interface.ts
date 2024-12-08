@@ -1,4 +1,4 @@
-import { TooltipOptions } from "primeng/api";
+import { FilterMetadata, TooltipOptions } from "primeng/api";
 
 /**
  * DataSource Interface for defining the data and header structure.
@@ -35,6 +35,7 @@ export interface DataQuery {
     limit: number;
     skip: number;
     sortBy: SortParameter;
+    filterBy?: FilterParameter;
 }
 
 interface SortParameter {
@@ -56,4 +57,18 @@ export interface ActionButton<T = any> {
     outlined?: boolean;
     text?: boolean;
     visibility?: (data: T) => boolean;
+
+
 }
+
+
+export interface Condition {
+    value: any; // or you can use specific types like string | number if known
+    matchMode: string;
+    operator: string;
+};
+
+export interface FilterParameter {
+    filters: { [s: string]: FilterMetadata | FilterMetadata[]; };
+    operator: string;
+};
